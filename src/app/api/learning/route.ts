@@ -46,6 +46,45 @@ const schema = {
 
 const validate = ajv.compile<Question>(schema);
 
+const GrammarTopics = [
+  "Syntax",
+  "Tenses",
+  "Punctuation",
+  "Verbs",
+  "Nouns",
+  "Adjectives",
+  "Prepositions",
+  "Pronouns",
+  "Conjunctions",
+  "Articles",
+];
+
+const mathTopics = [
+  "Algebra",
+  "Geometry",
+  "Calculus",
+  "Trigonometry",
+  "Fractions",
+  "Equations",
+  "Probability",
+  "Statistics",
+  "Graphs",
+  "Functions",
+];
+
+const historyTopics = [
+  "Civilization",
+  "Revolution",
+  "Dynasty",
+  "Empire",
+  "Warfare",
+  "Colonization",
+  "Renaissance",
+  "Independence",
+  "Monarchy",
+  "Constitution",
+];
+
 async function generateQuestion(
   requestBody: Omit<Question, "question">
 ): Promise<Question | { error: string; code?: number }> {
@@ -60,6 +99,15 @@ async function generateQuestion(
   if (requestBody.question_type === "true_false") {
     prompt +=
       "\nSince the question type is 'true_false', the 'options' field must contain only 'True' and 'False' (case-insensitive). Ensure one of these is the 'correct_answer'.";
+  }
+
+  if (requestBody.topic) {
+    switch (requestBody.topic) {
+      case "grammar":
+        const randomizer =
+          GrammarTopics[Math.floor(Math.random() * GrammarTopics.length)];
+        prompt += `\nUse the specific grammar quiz on this topic: ${randomizer}`;
+    }
   }
 
   if (requestBody.level) {

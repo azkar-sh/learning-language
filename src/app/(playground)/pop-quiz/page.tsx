@@ -91,8 +91,6 @@ function PopQuiz() {
     }
   };
 
-  console.log(error);
-
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
     field: keyof Omit<Question, "question" | "level_adjustment_reason">
