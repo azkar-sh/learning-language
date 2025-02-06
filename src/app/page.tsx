@@ -11,7 +11,7 @@ export default function Home() {
 
   return (
     <nav className="flex gap-3">
-      <button onClick={() => handlerNav("/learn")}>Learning Language</button>
+      <button onClick={() => handlerNav("/pop-quiz")}>Pop Quiz!</button>
     </nav>
   );
 }

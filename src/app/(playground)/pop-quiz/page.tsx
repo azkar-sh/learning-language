@@ -28,7 +28,7 @@ interface ErrorMessage {
   code?: number;
 }
 
-function App() {
+function PopQuiz() {
   const [question, setQuestion] = useState<Question | null>(null);
   const [error, setError] = useState<ErrorMessage | null>(null);
   const [loading, setLoading] = useState(false);
@@ -51,7 +51,7 @@ function App() {
     setError(null);
 
     try {
-      const response = await fetch("/api/learning-language", {
+      const response = await fetch("/api/learning", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -402,4 +402,4 @@ function App() {
   );
 }
 
-export default App;
+export default PopQuiz;
