@@ -43,11 +43,16 @@ Ensure you have **Node.js** and **npm** (or **yarn**) installed on your machine.
    ```sh
    npm install  # or yarn install
    ```
-3. Run the development server:
+3. Set up environment variables:
+   Create a `.env` file and add your Groq API key:
+   ```sh
+   GROQ_API_KEY=your_api_key_here
+   ```
+4. Run the development server:
    ```sh
    npm run dev  # or yarn dev
    ```
-4. Open **http://localhost:3000/** in your browser.
+5. Open **http://localhost:3000/** in your browser.
 
 ## Future Improvements
 

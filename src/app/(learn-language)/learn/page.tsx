@@ -19,6 +19,7 @@ interface Question {
   question: string;
   options: string[];
   correct_answer: string;
+  correct_answer_reason?: string;
   previous_question?: PreviousQuestion;
 }
 
@@ -213,8 +214,8 @@ function App() {
               >
                 <option value="English">English</option>
                 <option value="Indonesia">Indonesia</option>
-                <option value="Arabic">Arabic</option>
-                <option value="Japanese">Japanese</option>
+                <option value="French">French</option>
+                <option value="Spain">Spain</option>
               </select>
             </div>
 
@@ -287,13 +288,13 @@ function App() {
               <motion.h2
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="text-2xl font-bold text-gray-900 mb-6"
+                className="text-2xl font-semibold text-gray-900 mb-6"
               >
                 {question.question}
               </motion.h2>
 
               {question.options && question.options.length > 0 && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {question.options.map((option, index) => (
                     <motion.button
                       key={index}
@@ -313,14 +314,29 @@ function App() {
                       whileTap={{ scale: 0.98 }}
                     >
                       <div className="flex items-center">
-                        <span className="text-lg">{option}</span>
-                        {selectedOption === option && (
+                        <div className="relative">
+                          <div className="absolute -top-8 -left-6">
+                            <span
+                              className={`text-4xl opacity-40 ${
+                                selectedOption
+                                  ? question.correct_answer === option
+                                    ? "text-green-500"
+                                    : "text-red-500"
+                                  : ""
+                              }`}
+                            >
+                              {String.fromCharCode(65 + index)}
+                            </span>
+                          </div>
+                          <span className="text-lg">{option}</span>
+                        </div>
+                        {selectedOption && (
                           <motion.span
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
                             className="ml-auto"
                           >
-                            {answerStatus ? (
+                            {question.correct_answer === option ? (
                               <CheckCircle2 className="h-6 w-6 text-green-500" />
                             ) : (
                               <XCircle className="h-6 w-6 text-red-500" />
@@ -339,18 +355,18 @@ function App() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
-                    className={`mt-6 text-center ${
-                      answerStatus ? "text-green-600" : "text-red-600"
+                    className={`mt-6  ${
+                      answerStatus ? "text-green-600 text-center text-xl" : ""
                     }`}
                   >
-                    <p className="text-xl">
+                    <p className="">
                       {answerStatus ? (
                         "Correct Answer! 🎉"
                       ) : (
                         <>
-                          Incorrect Answer! The correct answer is <br />
+                          Explanation is <br />
                           <span className="font-bold">
-                            {question.correct_answer}
+                            {question.correct_answer_reason}
                           </span>
                         </>
                       )}

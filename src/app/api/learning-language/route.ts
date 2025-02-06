@@ -31,6 +31,7 @@ const schema = {
     question: { type: "string" },
     options: { type: "array", items: { type: "string" } },
     correct_answer: { type: "string" },
+    correct_answer_reason: { type: "string" },
   },
   required: [
     "question_type",
@@ -102,7 +103,7 @@ async function generateQuestion(
           content: prompt,
         },
       ],
-      model: "llama-3.3-70b-specdec",
+      model: "llama-3.3-70b-versatile",
       temperature: 0.7,
       stream: false,
       response_format: { type: "json_object" },
