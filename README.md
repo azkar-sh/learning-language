@@ -70,7 +70,3 @@ This project is **open-source** and available for learning purposes. Feel free t
 ### 💡 Want to contribute or share feedback?
 
 We'd love to hear from you! Feel free to **open an issue, submit a PR, or just say hi!** 😊
-
----
-
-This version keeps it professional but adds a touch of fun and clarity. Let me know if you’d like any tweaks! 🚀

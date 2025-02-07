@@ -4,7 +4,7 @@
 import { useContext, useState } from "react";
 import { CheckCircle2, XCircle, Loader2, Brain } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ThemeContext } from "@/app/page";
+import { ThemeContext } from "@/app/context/ThemeContext";
 import {
   Select,
   SelectContent,

@@ -2,7 +2,7 @@
 import React, { useContext, useState } from "react";
 import { BookOpen, Loader2, Sparkles, Wand2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ThemeContext } from "@/app/page";
+import { ThemeContext } from "@/app/context/ThemeContext";
 
 interface Story {
   genre: string;
