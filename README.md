@@ -1,6 +1,6 @@
 # Learning Quiz
 
-A full-stack web application built using **Next.js (React)** for the frontend and a **backend API** to generate and evaluate learning quiz questions dynamically.
+A full-stack web application built using **Next.js (React)** for the frontend and a **backend API** to generate and evaluate **learning quiz** and **storytelling** dynamically.
 
 ## Features
 
@@ -8,6 +8,7 @@ A full-stack web application built using **Next.js (React)** for the frontend an
 - Supports different **difficulty levels** (Beginner to Master).
 - Choose from multiple **languages** (English, Indonesian, Arabic, etc.).
 - Interactive UI with animations using **Framer Motion**.
+- Generate story based on preference (**You can add your idea too!**)
 - Responsive and modern **UI/UX**.
 - Real-time answer validation and scoring system.
 

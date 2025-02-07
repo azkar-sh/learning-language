@@ -148,6 +148,7 @@ const StoryGenerator: React.FC = () => {
 
       const data: Story = await response.json();
       setStory(data);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message);
       console.error("Error:", err);
