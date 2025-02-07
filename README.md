@@ -27,6 +27,18 @@ A **full-stack** web application built with **Next.js (React)** and a **backend 
 - **Node.js** with **Next.js API Routes** – Handles quiz generation.
 - **Fetch API** – Communicates between client & server.
 
+## 🚀 Powered by Groq AI
+
+This app leverages **Groq AI** to generate quizzes and interactive stories with ultra-fast performance. Groq’s **Tensor Streaming Processors (TSPs)** enable lightning-fast inference for large language models (LLMs), making quiz generation and storytelling **seamless and real-time**.
+
+### ✨ Why Groq AI?
+
+- **⚡ Super Fast AI Processing** – Runs AI models with ultra-low latency.
+- **🔋 Efficient & Scalable** – More energy-efficient than traditional GPUs.
+- **📚 AI-Powered Learning & Storytelling** – Enables interactive experiences with dynamic content generation.
+
+With Groq AI, your learning quizzes and AI-generated stories are faster, smoother, and more responsive than ever! 🚀
+
 ## 🚀 Installation & Setup
 
 ### Prerequisites

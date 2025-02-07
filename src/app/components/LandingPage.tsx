@@ -2,7 +2,16 @@
 
 import React, { useContext, useState } from "react";
 import { ThemeContext } from "@/app/context/ThemeContext";
-import { Sun, Moon, Brain, BookOpen, ArrowLeftCircle } from "lucide-react";
+import {
+  Sun,
+  Moon,
+  Brain,
+  BookOpen,
+  ArrowLeftCircle,
+  Linkedin,
+  Mail,
+  Github,
+} from "lucide-react";
 import { motion } from "framer-motion";
 import PopQuiz from "@/app/(playground)/pop-quiz/page";
 import StoryGenerator from "@/app/(playground)/storyteller/page";
@@ -74,7 +83,7 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      <main className="pt-24 px-6">
+      <main className="pt-24 px-6 min-h-screen flex flex-col justify-between">
         {selectedProject === "pop-quiz" ? (
           <PopQuiz />
         ) : selectedProject === "storyteller" ? (
@@ -127,6 +136,41 @@ export default function LandingPage() {
             </div>
           </div>
         )}
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex justify-center gap-6 py-8"
+        >
+          <motion.a
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            href="https://github.com/azkar-sh/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="opacity-80 hover:opacity-100"
+          >
+            <Github className="w-6 h-6" />
+          </motion.a>
+          <motion.a
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            href="https://www.linkedin.com/in/aziz-ashshiddiq/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="opacity-80 hover:opacity-100"
+          >
+            <Linkedin className="w-6 h-6" />
+          </motion.a>
+          <motion.a
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            href="mailto:akbar.dizir@gmail.com"
+            className="opacity-80 hover:opacity-100"
+          >
+            <Mail className="w-6 h-6" />
+          </motion.a>
+        </motion.div>
       </main>
     </div>
   );
