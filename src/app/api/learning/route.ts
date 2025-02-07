@@ -9,8 +9,14 @@ const ajv = new Ajv({ allErrors: true });
 addFormats(ajv);
 
 interface Question {
-  question_type: "multiple_choice" | "true_false";
-  level: "beginner" | "intermediate" | "advanced" | "expert" | "master";
+  question_type: "multiple_choice" | "true_false" | "random";
+  level:
+    | "beginner"
+    | "intermediate"
+    | "advanced"
+    | "expert"
+    | "master"
+    | "random";
   language: string;
   topic: string;
   question: string;
@@ -21,10 +27,20 @@ interface Question {
 const schema = {
   type: "object",
   properties: {
-    question_type: { type: "string", enum: ["multiple_choice", "true_false"] },
+    question_type: {
+      type: "string",
+      enum: ["multiple_choice", "true_false", "random"],
+    },
     level: {
       type: "string",
-      enum: ["beginner", "intermediate", "advanced", "expert", "master"],
+      enum: [
+        "beginner",
+        "intermediate",
+        "advanced",
+        "expert",
+        "master",
+        "random",
+      ],
     },
     language: { type: "string" },
     topic: { type: "string" },
@@ -119,6 +135,29 @@ async function generateQuestion(
   const selectedTopic = getUniqueTopic(requestBody.topic);
   if (requestBody.topic) {
     prompt += `\nUse the specific concept from this topic: ${selectedTopic}`;
+  }
+
+  if (requestBody.question_type === "random") {
+    const questionTypes = ["multiple choice", "true false"];
+    const randomType =
+      questionTypes[Math.floor(Math.random() * questionTypes.length)];
+
+    prompt += `\nGenerate a ${randomType} question. `;
+
+    if (randomType === "multiple choice") {
+      prompt +=
+        "Provide four options in the following format: [option1, option2, option3, option4].";
+    } else if (randomType === "true false") {
+      prompt +=
+        "Provide two options in the following format: [option1, option2]. The answer should be either 'True' or 'False'.";
+    }
+  }
+
+  if (requestBody.level === "random") {
+    const levels = ["beginner", "intermediate", "advanced", "expert", "master"];
+    const randomLevel = levels[Math.floor(Math.random() * levels.length)];
+
+    prompt += `\nGenerate a question at ${randomLevel} level.`;
   }
 
   try {

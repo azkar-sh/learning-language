@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useContext, useState } from "react";
+import { useContext, useState, useRef } from "react";
 import { CheckCircle2, XCircle, Loader2, Brain } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ThemeContext } from "@/app/context/ThemeContext";
@@ -44,8 +44,8 @@ function PopQuiz() {
   const [requestData, setRequestData] = useState<
     Omit<Question, "question" | "level_adjustment_reason">
   >({
-    question_type: "multiple_choice",
-    level: "beginner",
+    question_type: "random",
+    level: "random",
     language: "English",
     topic: "Grammar",
     options: [],
@@ -54,6 +54,8 @@ function PopQuiz() {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [answerStatus, setAnswerStatus] = useState<boolean | null>(null);
   const [correctAnswer, setCorrectAnswer] = useState<number>(0);
+  const questionDiv = useRef(null);
+  const [hasScrolled, setHasScrolled] = useState(false);
 
   const generateNewQuestion = async () => {
     setLoading(true);
@@ -86,6 +88,12 @@ function PopQuiz() {
         setQuestion(null);
       } else {
         setQuestion(data);
+        if (questionDiv.current && !hasScrolled) {
+          (questionDiv.current as HTMLElement).scrollIntoView({
+            behavior: "smooth",
+          });
+          setHasScrolled(true); // Mark as scrolled
+        }
         setSelectedOption(null);
         setAnswerStatus(null);
       }
@@ -112,7 +120,7 @@ function PopQuiz() {
     if (isCorrect) {
       setCorrectAnswer((prev) => prev + 1);
     } else {
-      setCorrectAnswer((prev) => prev - 1);
+      setCorrectAnswer((prev) => Math.max(0, prev - 1));
     }
 
     setTimeout(() => {
@@ -180,6 +188,7 @@ function PopQuiz() {
                   <SelectValue placeholder="Select Question Type" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="random">Random</SelectItem>
                   <SelectItem value="multiple_choice">
                     Multiple Choice
                   </SelectItem>
@@ -202,6 +211,7 @@ function PopQuiz() {
                   <SelectValue placeholder="Select Level" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="random">Random</SelectItem>
                   <SelectItem value="beginner">Beginner</SelectItem>
                   <SelectItem value="intermediate">Intermediate</SelectItem>
                   <SelectItem value="advanced">Advanced</SelectItem>
@@ -303,6 +313,8 @@ function PopQuiz() {
               className={` rounded-xl shadow-lg p-6 mt-2  ${
                 isDarkMode && "bg-black/20"
               }`}
+              whileHover={{ boxShadow: "0 8px 30px rgba(0,0,0,0.12)" }}
+              ref={questionDiv}
             >
               <motion.h2
                 initial={{ opacity: 0 }}
@@ -340,21 +352,8 @@ function PopQuiz() {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
-                      <div className="flex items-center">
-                        <div className="relative">
-                          <div className="absolute -top-8 -left-6">
-                            <span
-                              className={`text-4xl opacity-40 ${
-                                selectedOption
-                                  ? question.correct_answer === option
-                                    ? "text-green-500"
-                                    : "text-red-500"
-                                  : ""
-                              }`}
-                            >
-                              {String.fromCharCode(65 + index)}
-                            </span>
-                          </div>
+                      <div className="flex items-center relative">
+                        <div className="relative ">
                           <span className="text-lg">{option}</span>
                         </div>
                         {selectedOption && (
