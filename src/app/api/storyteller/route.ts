@@ -47,10 +47,15 @@ async function generateStory(
   let prompt = `You are a storyteller that outputs stories in JSON.\nThe JSON object must use the schema: ${jsonSchema}\n\nGenerate a story based on the following criteria:\n`;
 
   prompt +=
-    "The story contain minimum 800 words and maximum 1000 words (exclude HTML tags).\n Don't add the prolog or epilogue, just focus on the story content.\n Format the story using HTML tags for styling and structure to enhance readability.\n";
+    "The story contain minimum 800 words and maximum 1000 words (exclude HTML tags).\n Don't add the prolog or epilogue, just focus on the story content.\n Format the story using HTML tags for styling and structure to enhance readability. When line breaks make sure using double tag of <br />\n";
 
   for (const key in requestBody) {
     prompt += `${key}: ${requestBody[key as keyof typeof requestBody]}\n`;
+  }
+
+  if (!requestBody.short_idea) {
+    prompt +=
+      "\n If user not give short idea, just give short idea in maximum 3 words";
   }
 
   try {

@@ -1,9 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState } from "react";
-import { BookOpen, CheckCircle2, XCircle, Loader2 } from "lucide-react";
+import { useContext, useState } from "react";
+import { CheckCircle2, XCircle, Loader2, Brain } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ThemeContext } from "@/app/page";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface PreviousQuestion {
   question: string;
@@ -12,8 +20,8 @@ interface PreviousQuestion {
 }
 
 interface Question {
-  question_type: "multiple_choice" | "true_false";
-  level: "beginner" | "intermediate" | "advanced";
+  question_type: string;
+  level: string;
   language: string;
   topic: string;
   question: string;
@@ -29,6 +37,7 @@ interface ErrorMessage {
 }
 
 function PopQuiz() {
+  const { isDarkMode } = useContext(ThemeContext);
   const [question, setQuestion] = useState<Question | null>(null);
   const [error, setError] = useState<ErrorMessage | null>(null);
   const [loading, setLoading] = useState(false);
@@ -91,13 +100,6 @@ function PopQuiz() {
     }
   };
 
-  const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-    field: keyof Omit<Question, "question" | "level_adjustment_reason">
-  ) => {
-    setRequestData({ ...requestData, [field]: event.target.value });
-  };
-
   const handleOptionSelect = (option: string) => {
     if (loading || selectedOption || !question) return;
 
@@ -124,7 +126,9 @@ function PopQuiz() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8"
+      className={`min-h-screen pt-6 px-4 sm:px-0 lg:px-8 ${
+        isDarkMode ? "text-white" : "text-gray-900"
+      } `}
     >
       <motion.div
         className="max-w-3xl mx-auto"
@@ -142,98 +146,113 @@ function PopQuiz() {
             whileHover={{ rotate: 360 }}
             transition={{ duration: 0.5 }}
           >
-            <BookOpen className="h-12 w-12 text-indigo-600 mx-auto mb-4" />
+            <Brain className="h-12 w-12 mx-auto mb-4" />
           </motion.div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            Learning Quiz
-          </h1>
-          <p className="text-lg text-gray-600">
-            Test your knowledge and learn new concepts
-          </p>
+          <h1 className="text-4xl font-bold  mb-2">Learning Quiz</h1>
+          <p className="text-lg ">Test your knowledge and learn new concepts</p>
         </motion.div>
 
         <motion.div
-          className="bg-white rounded-xl shadow-lg p-6 mb-8"
+          className={`"rounded-xl shadow-lg p-6 mb-8" ${
+            isDarkMode && "bg-black/20"
+          }`}
           whileHover={{ boxShadow: "0 8px 30px rgba(0,0,0,0.12)" }}
           transition={{ duration: 0.3 }}
         >
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <div className={`grid grid-cols-1 gap-6 sm:grid-cols-2 `}>
             <div className="space-y-2">
               <label
                 htmlFor="question_type"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium"
               >
                 Question Type
               </label>
-              <select
-                id="question_type"
+              <Select
+                onValueChange={(value) =>
+                  setRequestData({
+                    ...requestData,
+                    question_type: value,
+                  })
+                }
                 value={requestData.question_type}
-                onChange={(e) => handleInputChange(e, "question_type")}
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-all duration-300"
               >
-                <option value="multiple_choice">Multiple Choice</option>
-                <option value="true_false">True/False</option>
-              </select>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select Question Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="multiple_choice">
+                    Multiple Choice
+                  </SelectItem>
+                  <SelectItem value="true_false">True/False</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="space-y-2">
-              <label
-                htmlFor="level"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label htmlFor="level" className="block text-sm font-medium">
                 Level
               </label>
-              <select
-                id="level"
+              <Select
+                onValueChange={(value) =>
+                  setRequestData({ ...requestData, level: value })
+                }
                 value={requestData.level}
-                onChange={(e) => handleInputChange(e, "level")}
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-all duration-300"
               >
-                <option value="beginner">Beginner</option>
-                <option value="intermediate">Intermediate</option>
-                <option value="advanced">Advanced</option>
-                <option value="expert">Expert</option>
-                <option value="master">Master</option>
-              </select>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select Level" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="beginner">Beginner</SelectItem>
+                  <SelectItem value="intermediate">Intermediate</SelectItem>
+                  <SelectItem value="advanced">Advanced</SelectItem>
+                  <SelectItem value="expert">Expert</SelectItem>
+                  <SelectItem value="master">Master</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="space-y-2">
-              <label
-                htmlFor="language"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label htmlFor="language" className="block text-sm font-medium">
                 Language
               </label>
-              <select
-                id="language"
+              <Select
+                onValueChange={(value) =>
+                  setRequestData({ ...requestData, language: value })
+                }
                 value={requestData.language}
-                onChange={(e) => handleInputChange(e, "language")}
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-all duration-300"
               >
-                <option value="English">English</option>
-                <option value="Indonesia">Indonesia</option>
-                <option value="French">French</option>
-                <option value="Spain">Spain</option>
-              </select>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select language" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="English">English</SelectItem>
+                  <SelectItem value="Bahasa Indonesia">Indonesia</SelectItem>
+                  <SelectItem value="Japanese">Japanese</SelectItem>
+                  <SelectItem value="Spain">Spain</SelectItem>
+                  <SelectItem value="French">French</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="space-y-2">
-              <label
-                htmlFor="topic"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label htmlFor="topic" className="block text-sm font-medium">
                 Topic
               </label>
-              <select
-                id="topic"
+              <Select
+                onValueChange={(value) =>
+                  setRequestData({ ...requestData, topic: value })
+                }
                 value={requestData.topic}
-                onChange={(e) => handleInputChange(e, "topic")}
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-all duration-300"
               >
-                <option value="grammar">Grammar</option>
-                <option value="math">Math</option>
-                <option value="history">History</option>
-              </select>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select Topic" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Grammar">Grammar</SelectItem>
+                  <SelectItem value="History">History</SelectItem>
+                  <SelectItem value="Math">Math</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
@@ -281,12 +300,16 @@ function PopQuiz() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="bg-white rounded-xl shadow-lg p-6"
+              className={` rounded-xl shadow-lg p-6 mt-2  ${
+                isDarkMode && "bg-black/20"
+              }`}
             >
               <motion.h2
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="text-2xl font-semibold text-gray-900 mb-6"
+                className={`text-2xl font-semibold mb-6 ${
+                  isDarkMode ? "text-white" : "text-gray-900 "
+                }`}
               >
                 {question.question}
               </motion.h2>
@@ -301,8 +324,14 @@ function PopQuiz() {
                       className={`w-full text-left p-4 rounded-lg border-2 ${
                         selectedOption === option
                           ? answerStatus
-                            ? "border-green-500 bg-green-50"
+                            ? isDarkMode
+                              ? "border-green-200 bg-green-800/20"
+                              : "border-green-500 bg-green-50"
+                            : isDarkMode
+                            ? "border-red-200 bg-red-800/20"
                             : "border-red-500 bg-red-50"
+                          : isDarkMode
+                          ? "hover:border-blue-600 hover:bg-blue-800/20"
                           : "border-gray-200 hover:border-indigo-500 hover:bg-indigo-50"
                       }`}
                       initial={{ opacity: 0, x: -20 }}
@@ -385,7 +414,7 @@ function PopQuiz() {
               className="mt-8 text-center"
             >
               <motion.h2
-                className="text-2xl font-bold text-gray-900 mb-4"
+                className="text-2xl font-bold"
                 initial={{ scale: 0.9 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 200 }}

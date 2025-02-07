@@ -46,97 +46,79 @@ const schema = {
 
 const validate = ajv.compile<Question>(schema);
 
-const GrammarTopics = [
-  "Syntax",
-  "Tenses",
-  "Punctuation",
-  "Verbs",
-  "Nouns",
-  "Adjectives",
-  "Prepositions",
-  "Pronouns",
-  "Conjunctions",
-  "Articles",
-];
+const topics: { [key: string]: string[] } = {
+  Grammar: [
+    "Syntax",
+    "Tenses",
+    "Punctuation",
+    "Verbs",
+    "Nouns",
+    "Adjectives",
+    "Prepositions",
+    "Pronouns",
+    "Conjunctions",
+    "Articles",
+  ],
+  Math: [
+    "Algebra",
+    "Geometry",
+    "Calculus",
+    "Trigonometry",
+    "Fractions",
+    "Equations",
+    "Probability",
+    "Statistics",
+    "Graphs",
+    "Functions",
+  ],
+  History: [
+    "Civilization",
+    "Revolution",
+    "Dynasty",
+    "Empire",
+    "Warfare",
+    "Colonization",
+    "Renaissance",
+    "Independence",
+    "Monarchy",
+    "Constitution",
+  ],
+};
 
-const mathTopics = [
-  "Algebra",
-  "Geometry",
-  "Calculus",
-  "Trigonometry",
-  "Fractions",
-  "Equations",
-  "Probability",
-  "Statistics",
-  "Graphs",
-  "Functions",
-];
+const usedTopics: { [key: string]: string[] } = {};
 
-const historyTopics = [
-  "Civilization",
-  "Revolution",
-  "Dynasty",
-  "Empire",
-  "Warfare",
-  "Colonization",
-  "Renaissance",
-  "Independence",
-  "Monarchy",
-  "Constitution",
-];
+function getUniqueTopic(subject: string) {
+  if (!topics[subject]) return "No topics available";
+
+  if (!usedTopics[subject]) usedTopics[subject] = [];
+  const availableTopics = topics[subject].filter(
+    (t) => !usedTopics[subject].includes(t)
+  );
+
+  if (availableTopics.length === 0) {
+    usedTopics[subject] = []; // Reset if all topics are used
+  }
+
+  const newTopic =
+    availableTopics[Math.floor(Math.random() * availableTopics.length)];
+  usedTopics[subject].push(newTopic);
+  return newTopic;
+}
 
 async function generateQuestion(
   requestBody: Omit<Question, "question">
 ): Promise<Question | { error: string; code?: number }> {
   const jsonSchema = JSON.stringify(schema, null, 4);
 
-  let prompt = `You are a question generator that outputs questions in JSON.\nThe JSON object must use the schema: ${jsonSchema}\n\nGenerate a question based on the following criteria:\n`;
+  let prompt = `You are a question generator that outputs questions in JSON format.\nThe JSON object must follow this schema: ${jsonSchema}\n\nGenerate a question based on the following criteria:\n`;
 
   for (const key in requestBody) {
     prompt += `${key}: ${requestBody[key as keyof typeof requestBody]}\n`;
   }
 
-  if (requestBody.question_type === "true_false") {
-    prompt +=
-      "\nSince the question type is 'true_false', the 'options' field must contain only 'True' and 'False' (case-insensitive). Ensure one of these is the 'correct_answer'.";
-  }
-
+  const selectedTopic = getUniqueTopic(requestBody.topic);
   if (requestBody.topic) {
-    switch (requestBody.topic) {
-      case "grammar":
-        const randomizer =
-          GrammarTopics[Math.floor(Math.random() * GrammarTopics.length)];
-        prompt += `\nUse the specific grammar quiz on this topic: ${randomizer}`;
-    }
-  }
-
-  if (requestBody.level) {
-    switch (requestBody.level) {
-      case "beginner":
-        prompt +=
-          "\nThe question should be simple and straightforward, suitable for someone with basic knowledge of the topic.";
-        break;
-      case "intermediate":
-        prompt +=
-          "\nThe question should be moderately challenging, requiring some understanding of the topic beyond the basics.";
-        break;
-      case "advanced":
-        prompt +=
-          "\nThe question should be complex and require a deep understanding of the topic, potentially involving multiple concepts or nuanced situations.";
-        break;
-      case "expert":
-        prompt +=
-          "\nThe question should be very challenging, requiring extensive knowledge and the ability to apply it creatively or critically.  It may involve complex problem-solving or analysis.";
-        break;
-      case "master":
-        prompt +=
-          "\nThe question should be extremely difficult, pushing the boundaries of knowledge in the topic. It may require original thought, synthesis of multiple disciplines, or dealing with ambiguity and incomplete information.";
-        break;
-      default:
-        prompt +=
-          "\nThe question should be appropriate for the specified level.";
-        break;
-    }
+    prompt += `\nUse the specific concept from this topic: ${selectedTopic}`;
   }
 
   try {
@@ -144,12 +126,9 @@ async function generateQuestion(
       messages: [
         {
           role: "system",
-          content: `You are a educator that has perfect knowledge to generate questions for ${requestBody.language} based on ${requestBody.topic} and ${requestBody.level} level.`,
+          content: `You are an educator with perfect knowledge to generate ${requestBody.language} questions on ${requestBody.topic} at ${requestBody.level} level.`,
         },
-        {
-          role: "user",
-          content: prompt,
-        },
+        { role: "user", content: prompt },
       ],
       model: "llama-3.3-70b-versatile",
       temperature: 0.7,
@@ -167,27 +146,8 @@ async function generateQuestion(
     const generatedQuestion = JSON.parse(
       chat_completion.choices[0].message.content as string
     ) as Question;
-
-    if (requestBody.question_type === "true_false") {
-      if (
-        !generatedQuestion.options ||
-        generatedQuestion.options.length !== 2 ||
-        !generatedQuestion.options.every(
-          (option) =>
-            option.toLowerCase() === "true" || option.toLowerCase() === "false"
-        )
-      ) {
-        return {
-          error:
-            "For true_false questions, options must be 'True' and 'False'.",
-          code: 409,
-        };
-      }
-    }
-
     const isValid = validate(generatedQuestion);
     if (!isValid) {
-      console.error("Generated question is invalid:", validate.errors);
       return {
         error: "Invalid generated question: " + ajv.errorsText(validate.errors),
         code: 400,
@@ -196,7 +156,6 @@ async function generateQuestion(
 
     return generatedQuestion;
   } catch (error: any) {
-    console.error("Error generating question:", error);
     return {
       error: "Failed to generate a question. Error: " + error.message,
       code: 500,
@@ -214,10 +173,11 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(question, { status: 200 });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error: any) {
     return NextResponse.json(
-      { error: error || "Internal server error" },
-      { status: 500 }
+      { error: "Invalid request", code: 400 },
+      { status: 400 }
     );
   }
 }
