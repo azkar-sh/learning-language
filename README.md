@@ -1,6 +1,6 @@
-# 🎉 Learning Quiz and Interactive Storyteller
+# 🎉 AI Playground
 
-A **full-stack** web application built with **Next.js (React)** and a **backend API** to dynamically generate and evaluate **learning quizzes** and **interactive storytelling**. 🚀
+A **full-stack** web application built with **Next.js (React)** and a **backend API** to dynamically generate and evaluate **learning quizzes**, **interactive storytelling** and **cooking idea**. 🚀
 
 ## ✨ Features
 
@@ -9,6 +9,7 @@ A **full-stack** web application built with **Next.js (React)** and a **backend 
 - 🌍 Choose from multiple **languages** (English, Indonesian, Arabic, etc.).
 - 🎨 Smooth animations with **Framer Motion**.
 - 📖 Generate a **story** based on your preferences (**You can add your own ideas too!** ✨).
+- 🍳 Generate a **cooking idea** based on your diet, preferences, and your ingredients (**Or something random too!**)
 - 📱 Fully **responsive** and modern **UI/UX**.
 - ⚡ Real-time **answer validation** and **scoring system**.
 

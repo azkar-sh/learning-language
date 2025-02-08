@@ -11,10 +11,12 @@ import {
   Linkedin,
   Mail,
   Github,
+  ChefHat,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import PopQuiz from "@/app/(playground)/pop-quiz/page";
 import StoryGenerator from "@/app/(playground)/storyteller/page";
+import CookingIdea from "../(playground)/cooking-idea/page";
 
 export default function LandingPage() {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
@@ -32,6 +34,13 @@ export default function LandingPage() {
       title: "AI Storyteller",
       description: "Creative storytelling platform powered by AI.",
       icon: <BookOpen className="w-6 h-6" />,
+    },
+    {
+      id: "cooking-idea",
+      title: "Cooking Idea Generator",
+      description:
+        "AI-powered cooking idea generator for interactive learning.",
+      icon: <ChefHat className="w-6 h-6" />,
     },
   ];
 
@@ -88,6 +97,8 @@ export default function LandingPage() {
           <PopQuiz />
         ) : selectedProject === "storyteller" ? (
           <StoryGenerator />
+        ) : selectedProject === "cooking-idea" ? (
+          <CookingIdea />
         ) : (
           <div className="max-w-7xl mx-auto">
             <motion.div
