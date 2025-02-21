@@ -74,6 +74,13 @@ Make sure you have **Node.js** and **npm** (or **yarn**) installed.
 - 🔑 Implement **authentication** for personalized experiences.
 - 🤖 Support **AI-generated questions**.
 
+## ⬆️ Updates
+
+### 📅 Feb, 21, 2025
+
+- ✨ **Added Mystical Horoscope** feature:
+  - Users can input their birth date to receive their daily horoscope.
+
 ## 📜 License
 
 This project is **open-source** and available for learning purposes. Feel free to explore and contribute! 🚀

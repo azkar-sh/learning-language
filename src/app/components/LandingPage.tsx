@@ -12,11 +12,13 @@ import {
   Mail,
   Github,
   ChefHat,
+  Stars,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import PopQuiz from "@/app/(playground)/pop-quiz/page";
 import StoryGenerator from "@/app/(playground)/storyteller/page";
 import CookingIdea from "../(playground)/cooking-idea/page";
+import Horoscope from "../(playground)/horoscope/page";
 
 export default function LandingPage() {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
@@ -41,6 +43,12 @@ export default function LandingPage() {
       description:
         "AI-powered cooking idea generator for interactive learning.",
       icon: <ChefHat className="w-6 h-6" />,
+    },
+    {
+      id: "horoscope",
+      title: "Mystical Horoscope",
+      description: "Discover what the stars and AI have in store for you.",
+      icon: <Stars className="w-6 h-6" />,
     },
   ];
 
@@ -99,6 +107,8 @@ export default function LandingPage() {
           <StoryGenerator />
         ) : selectedProject === "cooking-idea" ? (
           <CookingIdea />
+        ) : selectedProject === "horoscope" ? (
+          <Horoscope />
         ) : (
           <div className="max-w-7xl mx-auto">
             <motion.div
